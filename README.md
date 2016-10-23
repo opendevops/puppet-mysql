@@ -1,5 +1,14 @@
 # mysql
 
+example:
+```
+include mysql
+mysql::config { 'mysql_config': password => 'verystrongpassword' }
+mysql::user { 'dbuser': password => 'strongpassword' }
+mysql::database { 'appserver': user => 'dbuser' }
+```
+
+
 #### Table of Contents
 
 1. [Overview](#overview)

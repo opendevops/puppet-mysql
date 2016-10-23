@@ -23,19 +23,46 @@
 #
 # === Examples
 #
-#  class { 'mysql':
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
-#  }
+# include mysql
+# mysql::config { 'mysql_config': password => 'verystrongpassword' }
+# mysql::user { 'dbuser': password => 'strongpassword' }
+# mysql::database { 'appserver': user => 'dbuser' }
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Matthew Hansen
 #
 # === Copyright
 #
-# Copyright 2016 Your name here, unless otherwise noted.
+# Copyright 2016 Matthew Hansen
 #
-class mysql {
+class mysql () {
+
+
+  # install mysql-server package
+  package { 'mysql-server':
+    ensure  => installed,
+    require => Exec['apt-update'],
+  }
+
+  # install mysql-client package
+  package { 'mysql-client':
+    ensure  => installed,
+    require => Package['mysql-server'],
+  }
+
+  # install mysql-common package
+  package { 'mysql-common':
+    ensure  => installed,
+    require => Package['mysql-server'],
+  }
+
+  # ensure mysql service is running
+  service { 'mysql':
+    ensure  => running,
+    enable  => true,
+    require => Package["mysql-server"],
+  }
 
 
 }
